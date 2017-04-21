@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="sy.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="sy.model.User" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="createdatetime" property="createdatetime" jdbcType="TIMESTAMP" />
+    <result column="modifydatetime" property="modifydatetime" jdbcType="TIMESTAMP" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, createdatetime, modifydatetime, name, pwd, createTime, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="sy.model.User" >
+    insert into user (id, createdatetime, modifydatetime, 
+      name, pwd, createTime, 
+      updateTime)
+    values (#{id,jdbcType=VARCHAR}, #{createdatetime,jdbcType=TIMESTAMP}, #{modifydatetime,jdbcType=TIMESTAMP}, 
+      #{name,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="sy.model.User" >
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createdatetime != null" >
+        createdatetime,
+      </if>
+      <if test="modifydatetime != null" >
+        modifydatetime,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="pwd != null" >
+        pwd,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="updatetime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="createdatetime != null" >
+        #{createdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifydatetime != null" >
+        #{modifydatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="sy.model.User" >
+    update user
+    <set >
+      <if test="createdatetime != null" >
+        createdatetime = #{createdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifydatetime != null" >
+        modifydatetime = #{modifydatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="sy.model.User" >
+    update user
+    set createdatetime = #{createdatetime,jdbcType=TIMESTAMP},
+      modifydatetime = #{modifydatetime,jdbcType=TIMESTAMP},
+      name = #{name,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <resultMap id="userResultMapWithRole" type="sy.model.User" extends="BaseResultMap">
+  	<collection property="userRoles" column="id" javaType="list"  select="selectUserRole"></collection>
+  </resultMap>
+  <select id="selectUserRole" parameterType="java.lang.String" resultType="sy.model.UserRole">
+  	select * from UserRole where UserRole.userid=#{id,jdbcType=VARCHAR}
+  </select>
+  <select id="getAll" resultMap="userResultMapWithRole">
+  	select * from user
+  </select>
+  <resultMap id="userResultMapWithRole2" type="sy.model.User" extends="BaseResultMap"> 
+  	<collection property="userRoles" javaType="list" ofType="sy.model.UserRole">
+  		<id column="userroleId" property="id" jdbcType="VARCHAR" />
+    	<result column="userId" property="userid" jdbcType="VARCHAR" />
+    	<result column="roleId" property="roleid" jdbcType="VARCHAR" />
+  	</collection>
+  </resultMap>
+  <select id="getAllLeftJoin" resultMap="userResultMapWithRole2">
+  	select a.id,a.name,a.createTime,b.id as userroleId,userId,roleId  from user a LEFT JOIN userrole b on a.id=b.userId
+  </select>
+  <select id="getAllUserLeftjoinRole" resultMap="userResultMapWithRole3">
+		SELECT
+			a.id,
+			a. NAME,
+			a.createTime,
+			b.id AS userroleId,
+			userId,
+			roleId,
+			c.text
+		FROM
+			USER a
+		LEFT JOIN userrole b ON a.id = b.userId
+		LEFT JOIN role c ON c.id = b.roleId
+  </select>
+  <resultMap id="userResultMapWithRole3" type="sy.model.User" extends="BaseResultMap"> 
+  	<collection property="userRoles" javaType="list" ofType="sy.model.UserRole">
+  		<id column="userroleId" property="id" jdbcType="VARCHAR" />
+    	<result column="userId" property="userid" jdbcType="VARCHAR" />
+    	<result column="roleId" property="roleid" jdbcType="VARCHAR" />
+    	
+    	<association property="role" javaType="sy.model.Role">
+    		<result column="text" property="text" jdbcType="VARCHAR"/>
+    	</association>
+  	</collection>
+  </resultMap>
+</mapper>

@@ -1,0 +1,43 @@
+package sy.model;
+
+public class UserRole {
+    private String id;
+
+    private String userid;
+
+    private String roleid;
+
+    private Role role;
+    
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid == null ? null : userid.trim();
+    }
+
+    public String getRoleid() {
+        return roleid;
+    }
+
+    public void setRoleid(String roleid) {
+        this.roleid = roleid == null ? null : roleid.trim();
+    }
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+}

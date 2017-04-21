@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="sy.dao.RoleResourceMapper" >
+  <resultMap id="BaseResultMap" type="sy.model.RoleResource" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="roleId" property="roleid" jdbcType="VARCHAR" />
+    <result column="resourceId" property="resourceid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, roleId, resourceId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from roleresource
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from roleresource
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="sy.model.RoleResource" >
+    insert into roleresource (id, roleId, resourceId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{roleid,jdbcType=VARCHAR}, #{resourceid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="sy.model.RoleResource" >
+    insert into roleresource
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roleid != null" >
+        roleId,
+      </if>
+      <if test="resourceid != null" >
+        resourceId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="roleid != null" >
+        #{roleid,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceid != null" >
+        #{resourceid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="sy.model.RoleResource" >
+    update roleresource
+    <set >
+      <if test="roleid != null" >
+        roleId = #{roleid,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceid != null" >
+        resourceId = #{resourceid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="sy.model.RoleResource" >
+    update roleresource
+    set roleId = #{roleid,jdbcType=VARCHAR},
+      resourceId = #{resourceid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
