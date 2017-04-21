@@ -1,2 +1,5 @@
 /target/
 /mybatis.log
+/.gitignore
+/.project
+/.settings
