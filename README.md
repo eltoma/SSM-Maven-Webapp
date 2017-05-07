@@ -1,1 +1,1 @@
-# SpringMVC + Spring + Mybatis 开发框架 
+# SpringMVC + Spring + Mybatis 后台框架
