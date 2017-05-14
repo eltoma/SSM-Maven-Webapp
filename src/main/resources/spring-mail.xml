@@ -30,15 +30,45 @@
                 <prop key="mail.smtp.port">${mail.smtp.port}</prop>    
             </props>    
         </property>    
+    </bean>
+        
+    <!-- MIME 发送器   -->    
+    <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">    
+        <property name="host" value="${mail.host}" />   
+        <property name="username" value="${mail.username}" />    
+        <property name="password" value="${mail.password}" />    
+        <property name="defaultEncoding" value="UTF-8"></property>    
+        <property name="javaMailProperties">    
+            <props>    
+                <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>    
+                <prop key="mail.smtp.timeout">${mail.smtp.timeout}</prop>    
+                <prop key="mail.smtp.port">${mail.smtp.port}</prop>    
+            </props>    
+        </property>    
     </bean>    
       
     <bean id="simpleMailMessage" class="org.springframework.mail.SimpleMailMessage">  
+        <!-- 发件人email -->  
+        <property name="from" value="${mail.username}" />  
+    </bean>
+    
+    <bean id="mimeMessage" class="javax.mail.internet.MimeMessage" 
+    	factory-bean="javaMailSender" factory-method="createMimeMessage">  
+    </bean>
+    
+      
+    <bean id="mimeMessageHelper" class="org.springframework.mail.javamail.MimeMessageHelper">  
+        <constructor-arg  name="mimeMessage" ref="mimeMessage"/> 
+        <constructor-arg  name="encoding" value="UTF-8"/> 
         <!-- 发件人email -->  
         <property name="from" value="${mail.username}" />  
     </bean>  
       
     <bean id="mailUtil" class="sy.util.MailUtil">  
         <property name="mailSender" ref="mailSender"></property>  
+        <property name="javaMailSender" ref="javaMailSender"></property>  
         <property name="simpleMailMessage" ref="simpleMailMessage"></property>  
+        <!-- <property name="mimeMessage" ref="mimeMessage"></property>  --> 
+        <property name="mimeMessageHelper" ref="mimeMessageHelper"></property>  
     </bean>     
 </beans> 
